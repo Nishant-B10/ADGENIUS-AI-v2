@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { ChevronRight, Check, Zap, Target, Palette, Users, TrendingUp, DollarSign, Brain, Package, Upload, MapPin, Heart, ShoppingBag } from 'lucide-react';
 
-// *** CORRECTION 1: Define a type for the answers state object ***
+// *** THE DEFINITIVE FIX - PART 1: Define a type for your answers state object ***
 type Answers = {
   [key: string]: any;
 };
 
 const EnhancedQuestionnaire = () => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  // *** CORRECTION 2: Apply the 'Answers' type to the useState hook ***
+  // *** THE DEFINITIVE FIX - PART 2: Apply the 'Answers' type to the useState hook ***
   const [answers, setAnswers] = useState<Answers>({});
   const [isComplete, setIsComplete] = useState(false);
   const [showFollowUp, setShowFollowUp] = useState(false);
@@ -129,7 +129,6 @@ const EnhancedQuestionnaire = () => {
   const currentQuestionData = questions[currentQuestion - 1];
 
   const handleResponse = (questionId: number | string, value: any) => {
-    // Because 'answers' is typed, TypeScript now knows 'prev' is of type 'Answers'
     setAnswers(prev => ({ ...prev, [questionId]: value }));
 
     if (currentQuestionData?.type === 'text_with_choices' && typeof value === 'string' && value.length > 50 && !showFollowUp) {
@@ -138,7 +137,6 @@ const EnhancedQuestionnaire = () => {
   };
 
   const handleFieldChange = (questionId: number, fieldName: string, value: any) => {
-    // This also works now without needing to type 'prev' here
     setAnswers(prev => ({
       ...prev,
       [questionId]: {
