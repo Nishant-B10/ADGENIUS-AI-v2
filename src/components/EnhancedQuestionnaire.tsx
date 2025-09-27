@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronRight, Check, Zap, Target, Palette, Users, TrendingUp, DollarSign, Brain, Package, Upload, MapPin, Heart, ShoppingBag } from 'lucide-react';
 
-// *** THE DEFINITIVE FIX - PART 1: Define a type for your answers state object ***
 type Answers = {
   [key: string]: any;
 };
 
 const EnhancedQuestionnaire = () => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  // *** THE DEFINITIVE FIX - PART 2: Apply the 'Answers' type to the useState hook ***
   const [answers, setAnswers] = useState<Answers>({});
   const [isComplete, setIsComplete] = useState(false);
   const [showFollowUp, setShowFollowUp] = useState(false);
@@ -168,8 +166,9 @@ const EnhancedQuestionnaire = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageData = e.target?.result;
-        setUploadedImage(imageData);
-        handleFieldChange(1, 'product_image', imageData);
+        // *** THE FIX: Provide 'null' as a fallback if imageData is undefined ***
+        setUploadedImage(imageData ?? null);
+        handleFieldChange(1, 'product_image', imageData ?? null);
       };
       reader.readAsDataURL(file);
     }
@@ -309,7 +308,7 @@ const EnhancedQuestionnaire = () => {
                    background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                    boxShadow: 'var(--shadow-gold)'
                  }}>
-              {React.cloneElement(currentQuestionData?.icon as React.ReactElement, { color: 'var(--brand-charcoal)' })}
+              {currentQuestionData?.icon && React.cloneElement(currentQuestionData.icon as React.ReactElement, { color: 'var(--brand-charcoal)' })}
             </div>
             <div className="ml-6 text-left">
               <h1 className="text-hero" style={{ color: 'var(--text-primary)' }}>
