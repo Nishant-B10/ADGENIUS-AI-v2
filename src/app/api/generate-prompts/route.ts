@@ -242,9 +242,9 @@ Return ONLY valid JSON using "${productName}" throughout:
               scene_number: 4,
               duration: "25-30 seconds",
               shot_type: "Product beauty shot",
-              action: `Opening scene showcasing ${productName} in premium environment`,
-              lighting: `Golden hour lighting with ${primaryColor} brand color accents`,
-              subject: `${targetAges} person demonstrating ${productName} benefits`,
+              action: "Opening scene showcasing ${productName} in premium environment",
+              lighting: "Golden hour lighting with ${primaryColor} brand color accents",
+              subject: "${targetAges} person demonstrating ${productName} benefits",
               brand_integration: `${productName} prominently featured with ${secondaryColor} background`,
               product_reference: `${productName} final brand impression`
             }
