@@ -192,7 +192,7 @@ export default function Generate() {
                     Headlines (5 Variations)
                   </h2>
                   <div className="space-y-3">
-                    {generatedContent.headlines.map((headline, index) => (
+                    {generatedContent.(headlines || []).map((headline, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded">
                         <p className="text-gray-300">{headline}</p>
                         <button className="text-yellow-600 hover:text-yellow-500 text-sm">
@@ -230,7 +230,7 @@ export default function Generate() {
                     Call-to-Action Buttons
                   </h2>
                   <div className="flex flex-wrap gap-3">
-                    {generatedContent.ctas.map((cta, index) => (
+                    {generatedContent.(ctas || []).map((cta, index) => (
                       <button
                         key={index}
                         className="px-6 py-3 bg-gray-800 text-yellow-600 rounded hover:bg-gray-700 transition-all"
