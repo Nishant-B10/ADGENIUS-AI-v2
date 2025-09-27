@@ -29,24 +29,74 @@ export default function Generate() {
     }
   }, [])
 
-  const generateCopy = () => {
+  const generateCopy = async () => {
     setLoading(true)
+    setGeneratedContent(null)
 
-    setTimeout(() => {
-      const headlines = generateHeadlines(briefData)
-      const bodyCopy = generateBodyCopy(briefData)
-      const ctas = generateCTAs(briefData)
+    // Retrieve data from localStorage
+    const savedAnswers = localStorage.getItem('questionnaireAnswers')
 
-      setGeneratedContent({
-        headlines,
-        bodyCopy,
-        ctas
-      })
+    if (!savedAnswers) {
+      console.error("No questionnaire answers found in localStorage.")
       setLoading(false)
-    }, 3000)
+      // Redirect to the questionnaire if data is missing
+      window.location.href = '/questionnaire';
+      return;
+    }
+
+    const answers = JSON.parse(savedAnswers);
+
+    try {
+      // Send the data to your API route
+      const response = await fetch('/api/generate-prompts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ answers }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      
+      // Update the state with the generated content from the API
+      if (data.success) {
+        setGeneratedContent({
+          headlines: data.data.photo_ad_prompts.hero_image,
+          bodyCopy: {
+            opening: data.data.client_brief.product_overview,
+            middle: data.data.client_brief.target_audience_profile,
+            closing: data.data.client_brief.psychology_strategy
+          },
+          ctas: data.data.photo_ad_prompts.social_proof.prompt.split(',')
+        });
+      } else {
+        console.error('API returned an error:', data.error);
+        setGeneratedContent({
+          headlines: ["Error generating content. Please try again."],
+          bodyCopy: { opening: "", middle: "", closing: "" },
+          ctas: [""]
+        })
+      }
+
+    } catch (error) {
+      console.error('An error occurred while fetching content:', error);
+      setGeneratedContent({
+        headlines: ["Error generating content. Please check your API key and try again."],
+        bodyCopy: { opening: "", middle: "", closing: "" },
+        ctas: [""]
+      })
+    } finally {
+      setLoading(false);
+    }
   }
 
   const generateHeadlines = (brief) => {
+    // This function is now part of the new async function and is not needed as a standalone function
+    // For now, this is kept for reference but will eventually be removed or replaced
     const isRational = brief?.strategy === 'rational'
 
     if (isRational) {
@@ -69,6 +119,8 @@ export default function Generate() {
   }
 
   const generateBodyCopy = (brief) => {
+    // This function is now part of the new async function and is not needed as a standalone function
+    // For now, this is kept for reference but will eventually be removed or replaced
     const isRational = brief?.strategy === 'rational'
 
     if (isRational) {
@@ -87,6 +139,8 @@ export default function Generate() {
   }
 
   const generateCTAs = (brief) => {
+    // This function is now part of the new async function and is not needed as a standalone function
+    // For now, this is kept for reference but will eventually be removed or replaced
     const isRational = brief?.strategy === 'rational'
 
     if (isRational) {
