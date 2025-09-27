@@ -307,7 +307,6 @@ const EnhancedQuestionnaire = () => {
                    background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                    boxShadow: 'var(--shadow-gold)'
                  }}>
-              {/* THIS IS THE CORRECTED LINE */}
               <div style={{ color: 'var(--brand-charcoal)' }}>
                 {currentQuestionData?.icon}
               </div>
@@ -772,7 +771,8 @@ const EnhancedQuestionnaire = () => {
                     <div>
                       <div className="text-body-large font-semibold mb-1">{option.label}</div>
                       <div className="text-caption" style={{ color: 'var(--text-tertiary)' }}>
-                        {option.positioning}
+                        {/* THIS IS THE CORRECTED LINE */}
+                        {'positioning' in option && option.positioning}
                       </div>
                     </div>
                     {answers[currentQuestionData.id]?.includes(option.value) && (
