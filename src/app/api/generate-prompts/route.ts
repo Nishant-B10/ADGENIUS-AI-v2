@@ -20,33 +20,38 @@ Generate four comprehensive deliverables using all provided intelligence:
 Always use specific details from the provided data rather than generic placeholders.`;
 
 export async function POST(request: NextRequest) {
+  // Declare variables in the outer scope so they are accessible by both try and catch blocks
+  let answers = {};
+  let enhancedData = {};
+  let productAssets = {};
+  let audienceIntelligence = {};
+
   try {
     const body = await request.json();
-    const answers = body.answers || {};
+    answers = body.answers || {};
 
     console.log('🚀 Processing comprehensive brand and audience intelligence');
     
-    // FIXED: Proper data extraction from enhanced structure
-        const enhancedData = answers.enhanced_data || {};
-        const productAssets = enhancedData.product_assets || {};
-        const audienceIntelligence = enhancedData.audience_intelligence || {};
+    enhancedData = answers.enhanced_data || {};
+    productAssets = enhancedData.product_assets || {};
+    audienceIntelligence = enhancedData.audience_intelligence || {};
 
-        // CRITICAL FIX: Extract product name correctly
-        const productName = productAssets.name || answers[1] || 'PRODUCT_NAME_MISSING';
-        const brandColors = productAssets.brand_colors || {};
-        const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'TARGET_AGE_MISSING';
-        const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'INCOME_MISSING';
-        const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'VALUES_MISSING';
+    // CRITICAL FIX: Extract product name correctly
+    const productName = productAssets.name || answers[1] || 'PRODUCT_NAME_MISSING';
+    const brandColors = productAssets.brand_colors || {};
+    const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'TARGET_AGE_MISSING';
+    const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'INCOME_MISSING';
+    const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'VALUES_MISSING';
 
-        // DEBUG: Log what we extracted
-        console.log('📝 DEBUG - API Route - Extracted data:', {
-          productName,
-          targetAges,
-          incomeGroups,
-          coreValues,
-          primaryColor: brandColors.primary,
-          hasImage: !!productAssets.image
-        });
+    // DEBUG: Log what we extracted
+    console.log('📝 DEBUG - API Route - Extracted data:', {
+      productName,
+      targetAges,
+      incomeGroups,
+      coreValues,
+      primaryColor: brandColors.primary,
+      hasImage: !!productAssets.image
+    });
 
     // Check API key
     const apiKey = process.env.NEXT_PUBLIC_CLAUDE_API_KEY || process.env.CLAUDE_API_KEY;
@@ -184,18 +189,18 @@ Return ONLY valid JSON using "${productName}" throughout:
   } catch (error) {
     console.error('❌ Enhanced generation error:', error);
     
-    // Fallback with actual product name
-    const enhancedData = answers.enhanced_data || {};
-    const productAssets = enhancedData.product_assets || {};
-    const audienceIntelligence = enhancedData.audience_intelligence || {};
+    // Variables are now correctly in scope and can be used here.
+    const enhancedDataFallback = answers?.enhanced_data || {};
+    const productAssetsFallback = enhancedDataFallback.product_assets || {};
+    const audienceIntelligenceFallback = enhancedDataFallback.audience_intelligence || {};
     
-    const productName = productAssets.name || 'your product';
-    const primaryColor = productAssets.brand_colors?.primary || '#000000';
-    const secondaryColor = productAssets.brand_colors?.secondary || '#FFFFFF';
-    const accentColor = productAssets.brand_colors?.accent || '#D4AF37';
-    const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'target demographic';
-    const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'income bracket';
-    const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'customer values';
+    const productName = productAssetsFallback.name || 'your product';
+    const primaryColor = productAssetsFallback.brand_colors?.primary || '#000000';
+    const secondaryColor = productAssetsFallback.brand_colors?.secondary || '#FFFFFF';
+    const accentColor = productAssetsFallback.brand_colors?.accent || '#D4AF37';
+    const targetAges = audienceIntelligenceFallback.demographics?.age_ranges?.join(', ') || 'target demographic';
+    const incomeGroups = audienceIntelligenceFallback.demographics?.income_levels?.join(', ') || 'income bracket';
+    const coreValues = audienceIntelligenceFallback.psychographics?.core_values?.join(', ') || 'customer values';
     
     return NextResponse.json({
       success: false,
@@ -270,9 +275,9 @@ Return ONLY valid JSON using "${productName}" throughout:
           }
         },
         client_brief: {
-          product_overview: `${productName} - ${productAssets.category || 'Product'} targeting ${incomeGroups} customers`,
+          product_overview: `${productName} - ${productAssetsFallback.category || 'Product'} targeting ${incomeGroups} customers`,
           target_audience_profile: `${targetAges} customers, Income: ${incomeGroups}, Values: ${coreValues}`,
-          psychology_strategy: `${productName} marketing strategy for ${targetAges} customers who value ${coreValues}`,
+          psychology_strategy: `${productName} marketing approach for ${targetAges} customers who value ${coreValues}`,
           creative_guidelines: `Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}`,
           success_metrics: `${productName} performance measurement for ${incomeGroups} market penetration`
         },
