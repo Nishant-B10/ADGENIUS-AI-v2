@@ -166,7 +166,6 @@ const EnhancedQuestionnaire = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageData = e.target?.result;
-        // *** THE FIX: Provide 'null' as a fallback if imageData is undefined ***
         setUploadedImage(imageData ?? null);
         handleFieldChange(1, 'product_image', imageData ?? null);
       };
@@ -308,7 +307,10 @@ const EnhancedQuestionnaire = () => {
                    background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                    boxShadow: 'var(--shadow-gold)'
                  }}>
-              {currentQuestionData?.icon && React.cloneElement(currentQuestionData.icon as React.ReactElement, { color: 'var(--brand-charcoal)' })}
+              {/* THIS IS THE CORRECTED LINE */}
+              <div style={{ color: 'var(--brand-charcoal)' }}>
+                {currentQuestionData?.icon}
+              </div>
             </div>
             <div className="ml-6 text-left">
               <h1 className="text-hero" style={{ color: 'var(--text-primary)' }}>
