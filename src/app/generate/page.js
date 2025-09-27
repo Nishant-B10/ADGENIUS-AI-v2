@@ -6,9 +6,9 @@ import { exportCopyToText } from '@/components/ExportUtils'
 
 export default function Generate() {
   const [activeFormat, setActiveFormat] = useState('copy')
-  const [generatedContent, setGeneratedContent] = useState<any>(null)
+  const [generatedContent, setGeneratedContent] = useState<undefined>(null)
   const [loading, setLoading] = useState(false)
-  const [briefData, setBriefData] = useState<any>(null)
+  const [briefData, setBriefData] = useState<undefined>(null)
 
   useEffect(() => {
     // Get brief data from localStorage

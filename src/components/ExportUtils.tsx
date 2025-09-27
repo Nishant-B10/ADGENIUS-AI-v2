@@ -98,3 +98,4 @@ export const copyToClipboard = async (text: string) => {
     return false
   }
 }
+export function exportCopyToText() { return null; }
