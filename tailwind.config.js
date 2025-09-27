@@ -7,7 +7,17 @@ module.exports = {
   ],
   theme: {
     extend: {
-      // Add your custom theme extensions here
+      colors: {
+        'deep-black': '#0A0A0B',
+        'off-white': '#F8F9FA',
+        'gold': '#D4AF37',
+        'cream': '#E5E5E7',
+        // You can add other custom colors from your globals.css here
+      },
+      fontFamily: {
+        sans: ['Geist', 'sans-serif'],
+        serif: ['"Times New Roman"', 'serif'], // Example serif font
+      },
     },
   },
   plugins: [],
