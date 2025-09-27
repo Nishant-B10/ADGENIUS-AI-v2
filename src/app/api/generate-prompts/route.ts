@@ -121,6 +121,7 @@ Return ONLY valid JSON using "${productName}" throughout:
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
+      // FIXED: Replaced backticks with double quotes
       "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
       "product_reference": "${productName} clearly visible and referenced",
       "authenticity": "Genuine ${productName} user experience"
@@ -282,7 +283,7 @@ Return ONLY valid JSON using "${productName}" throughout:
         ad_storyline: {
           narrative_arc: `${productName} story targeting ${targetAges} customers who value ${coreValues}`,
           emotional_journey: "Customer transformation through ${productName}",
-          demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
+          demographic_targeting": `${productName} story resonates with ${targetAges} ${incomeGroups} audience",
           visual_progression: `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
           product_integration: `${productName} featured prominently throughout narrative arc`
         }
