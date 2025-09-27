@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
+import Navigation from "@/components/Navigation.js";
 
 export const metadata: Metadata = {
   title: "AdGenius AI - Intelligence Meets Imagination",

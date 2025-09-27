@@ -47,7 +47,7 @@ export default function Generate() {
     }, 3000)
   }
 
-  const generateHeadlines = (brief: any) => {
+  const generateHeadlines = (brief) => {
     const isRational = brief.strategy === 'rational'
     
     if (isRational) {
@@ -69,7 +69,7 @@ export default function Generate() {
     }
   }
 
-  const generateBodyCopy = (brief: any) => {
+  const generateBodyCopy = (brief) => {
     const isRational = brief.strategy === 'rational'
     
     if (isRational) {
@@ -87,7 +87,7 @@ export default function Generate() {
     }
   }
 
-  const generateCTAs = (brief: any) => {
+  const generateCTAs = (brief) => {
     const isRational = brief.strategy === 'rational'
     
     if (isRational) {
