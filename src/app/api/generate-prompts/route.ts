@@ -273,7 +273,7 @@ Return ONLY valid JSON using "${productName}" throughout:
         client_brief: {
           product_overview: "${productName} overview and positioning",
           target_audience": "${targetAges} ${incomeGroups} customers for ${productName}",
-          strategy": "${productName} marketing approach for ${coreValues} audience"
+          strategy": "${productName} marketing approach for ${targetAges} customers who value ${coreValues}"
         },
         ad_storyline: {
           narrative_arc: "${productName} story for ${targetAges} customers",
