@@ -1,7 +1,8 @@
 'use client'
 
-import EnhancedQuestionnaire from '@/components/EnhancedQuestionnaire'
+import React from 'react'; // Add this line
+import EnhancedQuestionnaire from '@/components/EnhancedQuestionnaire';
 
-export default function Questionnaire() {
-  return <EnhancedQuestionnaire />
+export default function QuestionnairePage() {
+  return <EnhancedQuestionnaire />;
 }
