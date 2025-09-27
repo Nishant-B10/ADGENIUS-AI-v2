@@ -1,6 +1,3 @@
-// This file needs to be updated to correctly export the function.
-
-// The export function needs a parameter to receive the content.
 export function exportCopyToText(content) {
   if (typeof window !== 'undefined' && content) {
     const { headlines, bodyCopy, ctas } = content;
