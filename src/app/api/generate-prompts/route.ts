@@ -254,8 +254,8 @@ Return ONLY valid JSON using "${productName}" throughout:
           hero_image: {
             prompt: "Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal",
             technical_specs: "Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}",
-            brand_elements: "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
-            product_focus: "${productName} as central focus with premium styling"
+            brand_elements": "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
+            product_focus": "${productName} as central focus with premium styling"
           },
           lifestyle_image: {
             prompt: "Authentic ${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents",
@@ -271,18 +271,16 @@ Return ONLY valid JSON using "${productName}" throughout:
           }
         },
         client_brief: {
-          product_overview: `${productName} - ${productAssetsFallback.category || 'Product'} targeting ${incomeGroups} customers`,
-          target_audience_profile: `${targetAges} customers, Income: ${incomeGroups}, Values: ${coreValues}`,
-          psychology_strategy: `${productName} marketing approach for ${targetAges} customers who value ${coreValues}`,
-          creative_guidelines: `Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}`,
-          success_metrics: `${productName} performance measurement for ${incomeGroups} market penetration`
+          product_overview: "${productName} overview and positioning",
+          target_audience": "${targetAges} ${incomeGroups} customers for ${productName}",
+          strategy": "${productName} marketing approach for ${coreValues} audience"
         },
         ad_storyline: {
-          narrative_arc: `${productName} story targeting ${targetAges} customers who value ${coreValues}`,
+          narrative_arc: "${productName} story for ${targetAges} customers",
           emotional_journey: "Customer transformation through ${productName}",
           demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
-          visual_progression: `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
-          product_integration: `${productName} featured prominently throughout narrative arc`
+          visual_progression: "${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}",
+          product_integration": "${productName} featured prominently throughout narrative arc"
         }
       },
       source: 'enhanced_fallback_with_product_name'
