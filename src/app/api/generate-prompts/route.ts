@@ -282,7 +282,7 @@ Return ONLY valid JSON using "${productName}" throughout:
         ad_storyline: {
           narrative_arc: `${productName} story targeting ${targetAges} customers who value ${coreValues}`,
           emotional_journey: "Customer transformation through ${productName}",
-          demographic_targeting": `${productName} story resonates with ${targetAges} ${incomeGroups} audience`,
+          demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
           visual_progression: `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
           product_integration: `${productName} featured prominently throughout narrative arc`
         }
