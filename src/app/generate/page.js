@@ -6,38 +6,41 @@ import { exportCopyToText } from '@/components/ExportUtils'
 
 export default function Generate() {
   const [activeFormat, setActiveFormat] = useState('copy')
-  const [generatedContent, setGeneratedContent] = useState<undefined>(null)
+  const [generatedContent, setGeneratedContent] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [briefData, setBriefData] = useState<undefined>(null)
+  const [briefData, setBriefData] = useState(null)
 
   useEffect(() => {
-    // Get brief data from localStorage
-    const savedAnswers = localStorage.getItem('questionnaireAnswers')
-    if (savedAnswers) {
-      const answers = JSON.parse(savedAnswers)
-      // Generate brief summary for copy generation
-      const brief = {
-        product: answers[1] || 'your product',
-        audience: answers[2] || 'target customers',
-        strategy: answers[3]?.includes('high') ? 'rational' : 'emotional',
-        competitors: answers[5] || '',
-        keyMessage: answers[10] || ''
+    // This check ensures the code inside only runs on the client-side
+    // where 'window' and 'localStorage' are available.
+    if (typeof window !== 'undefined') {
+      const savedAnswers = localStorage.getItem('questionnaireAnswers')
+      if (savedAnswers) {
+        const answers = JSON.parse(savedAnswers)
+        const brief = {
+          product: answers[1] || 'your product',
+          audience: answers[2] || 'target customers',
+          strategy: answers[3]?.includes('high') ? 'rational' : 'emotional',
+          competitors: answers[5] || '',
+          keyMessage: answers[10] || ''
+        }
+        setBriefData(brief)
+      } else {
+        // Redirect to questionnaire if no data exists
+        window.location.href = '/questionnaire'
       }
-      setBriefData(brief)
-    } else {
-      window.location.href = '/questionnaire'
     }
   }, [])
 
   const generateCopy = () => {
     setLoading(true)
-    
+
     // Simulate AI generation
     setTimeout(() => {
       const headlines = generateHeadlines(briefData)
       const bodyCopy = generateBodyCopy(briefData)
       const ctas = generateCTAs(briefData)
-      
+
       setGeneratedContent({
         headlines,
         bodyCopy,
@@ -48,12 +51,12 @@ export default function Generate() {
   }
 
   const generateHeadlines = (brief) => {
-    const isRational = brief.strategy === 'rational'
-    
+    const isRational = brief?.strategy === 'rational'
+
     if (isRational) {
       return [
-        `Proven Results: ${brief.product}`,
-        `The Smart Choice for ${brief.audience}`,
+        `Proven Results: ${brief?.product}`,
+        `The Smart Choice for ${brief?.audience}`,
         `Why Industry Leaders Choose Us`,
         `Measurable Impact, Guaranteed`,
         `Transform Your Business with Data-Driven Solutions`
@@ -70,11 +73,11 @@ export default function Generate() {
   }
 
   const generateBodyCopy = (brief) => {
-    const isRational = brief.strategy === 'rational'
-    
+    const isRational = brief?.strategy === 'rational'
+
     if (isRational) {
       return {
-        opening: `In today's competitive market, ${brief.audience} need solutions that deliver measurable results.`,
+        opening: `In today's competitive market, ${brief?.audience} need solutions that deliver measurable results.`,
         middle: `Our proven approach has helped over 10,000 businesses achieve their goals through systematic implementation and data-driven strategies.`,
         closing: `Don't just take our word for it - see the numbers that speak for themselves.`
       }
@@ -88,8 +91,8 @@ export default function Generate() {
   }
 
   const generateCTAs = (brief) => {
-    const isRational = brief.strategy === 'rational'
-    
+    const isRational = brief?.strategy === 'rational'
+
     if (isRational) {
       return [
         'Get Your Free Analysis',
@@ -192,7 +195,7 @@ export default function Generate() {
                     Headlines (5 Variations)
                   </h2>
                   <div className="space-y-3">
-                    {generatedContent.(headlines || []).map((headline, index) => (
+                    {generatedContent.headlines.map((headline, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-gray-800 rounded">
                         <p className="text-gray-300">{headline}</p>
                         <button className="text-yellow-600 hover:text-yellow-500 text-sm">
@@ -230,7 +233,7 @@ export default function Generate() {
                     Call-to-Action Buttons
                   </h2>
                   <div className="flex flex-wrap gap-3">
-                    {generatedContent.(ctas || []).map((cta, index) => (
+                    {generatedContent.ctas.map((cta, index) => (
                       <button
                         key={index}
                         className="px-6 py-3 bg-gray-800 text-yellow-600 rounded hover:bg-gray-700 transition-all"
@@ -248,11 +251,11 @@ export default function Generate() {
                     className="px-6 py-3 border border-gray-700 text-gray-400 rounded hover:border-white hover:text-white"
                   >
                     Generate New Variations
-                    </button>                    
-                  <button 
+                  </button>
+                  <button
                     onClick={() => exportCopyToText(generatedContent)}
                     className="px-8 py-3 bg-yellow-600 text-black font-medium rounded hover:bg-yellow-500"
-                >
+                  >
                     📥 Export All Copy
                   </button>
                 </div>
