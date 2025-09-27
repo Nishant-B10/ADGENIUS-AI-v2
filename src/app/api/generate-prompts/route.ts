@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     console.log('🚀 Processing comprehensive brand and audience intelligence');
     
-    // The variables are now declared after 'answers' has been populated.
+    // The variables are now correctly declared after 'answers' has been populated.
     const enhancedData = answers?.enhanced_data || {};
     const productAssets = enhancedData.product_assets || {};
     const audienceIntelligence = enhancedData.audience_intelligence || {};
@@ -121,7 +121,7 @@ Return ONLY valid JSON using "${productName}" throughout:
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
-      "prompt": `Authentic ${targetAges} customer testimonial featuring ${productName} benefits`,
+      "prompt": `Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction`,
       "product_reference": "${productName} clearly visible and referenced",
       "authenticity": "Genuine ${productName} user experience"
     }
@@ -134,7 +134,9 @@ Return ONLY valid JSON using "${productName}" throughout:
   "ad_storyline": {
     "narrative": "${productName} story for ${targetAges} customers",
     "emotional_journey": "Customer transformation through ${productName}",
-    "product_integration": "${productName} central to narrative arc"
+    "demographic_targeting": `${productName} story resonates with ${targetAges} ${incomeGroups} audience`,
+    "visual_progression": `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
+    "product_integration": `${productName} featured prominently throughout narrative arc`
   }
 }`
         }]
@@ -186,7 +188,6 @@ Return ONLY valid JSON using "${productName}" throughout:
   } catch (error) {
     console.error('❌ Enhanced generation error:', error);
     
-    // The fallback logic is now also correctly placed within the catch block
     const enhancedDataFallback = answers?.enhanced_data || {};
     const productAssetsFallback = enhancedDataFallback.product_assets || {};
     const audienceIntelligenceFallback = enhancedDataFallback.audience_intelligence || {};
