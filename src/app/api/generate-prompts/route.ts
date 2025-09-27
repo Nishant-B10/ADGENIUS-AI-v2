@@ -121,7 +121,7 @@ Return ONLY valid JSON using "${productName}" throughout:
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
-      "prompt": `Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction`,
+      "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} benefits",
       "product_reference": "${productName} clearly visible and referenced",
       "authenticity": "Genuine ${productName} user experience"
     }
@@ -134,9 +134,9 @@ Return ONLY valid JSON using "${productName}" throughout:
   "ad_storyline": {
     "narrative": "${productName} story for ${targetAges} customers",
     "emotional_journey": "Customer transformation through ${productName}",
-    "demographic_targeting": `${productName} story resonates with ${targetAges} ${incomeGroups} audience`,
-    "visual_progression": `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
-    "product_integration": `${productName} featured prominently throughout narrative arc`
+    "demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
+    "visual_progression": "${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}",
+    "product_integration": "${productName} featured prominently throughout narrative arc"
   }
 }`
         }]
