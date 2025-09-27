@@ -3,10 +3,10 @@ import { ChevronRight, Check, Zap, Target, Palette, Users, TrendingUp, DollarSig
 
 const EnhancedQuestionnaire = () => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [answers, setAnswers] = useState<Record<number, any>>({});
+  const [answers, setAnswers] = useState({});
   const [isComplete, setIsComplete] = useState(false);
   const [showFollowUp, setShowFollowUp] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadedImage, setUploadedImage] = useState(null);
 
   const questions = [
     {
@@ -122,15 +122,15 @@ const EnhancedQuestionnaire = () => {
 
   const currentQuestionData = questions[currentQuestion - 1];
 
-  const handleResponse = (questionId: number, value: any) => {
+  const handleResponse = (questionId, value) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
-    
-    if (currentQuestionData.type === 'text_with_choices' && value.length > 50 && !showFollowUp) {
+
+    if (currentQuestionData?.type === 'text_with_choices' && value.length > 50 && !showFollowUp) {
       setShowFollowUp(true);
     }
   };
 
-  const handleFieldChange = (questionId: number, fieldName: string, value: any) => {
+  const handleFieldChange = (questionId, fieldName, value) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: {
@@ -140,28 +140,28 @@ const EnhancedQuestionnaire = () => {
     }));
   };
 
-  const handleMultiSelectChange = (questionId: number, fieldName: string, optionValue: string, maxSelections?: number) => {
+  const handleMultiSelectChange = (questionId, fieldName, optionValue, maxSelections) => {
     const currentSelections = answers[questionId]?.[fieldName] || [];
     const isSelected = currentSelections.includes(optionValue);
     let newSelections;
-    
+
     if (isSelected) {
-      newSelections = currentSelections.filter((item: string) => item !== optionValue);
+      newSelections = currentSelections.filter((item) => item !== optionValue);
     } else if (currentSelections.length < (maxSelections || 10)) {
       newSelections = [...currentSelections, optionValue];
     } else {
       return;
     }
-    
+
     handleFieldChange(questionId, fieldName, newSelections);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const imageData = e.target?.result as string;
+        const imageData = e.target?.result;
         setUploadedImage(imageData);
         handleFieldChange(1, 'product_image', imageData);
       };
@@ -174,12 +174,10 @@ const EnhancedQuestionnaire = () => {
       setCurrentQuestion(currentQuestion + 1);
       setShowFollowUp(false);
     } else {
-      // CORRECTED: Better data structure mapping
       const productAssets = answers[1] || {};
       const audienceData = answers[3] || {};
-      
+
       const enhancedAnswers = {
-        // Legacy compatibility for existing brief page
         1: productAssets.product_description || '',
         2: answers[2] || '',
         3: answers[5] || '',
@@ -188,8 +186,7 @@ const EnhancedQuestionnaire = () => {
         6: audienceData,
         7: answers[7] || '',
         8: answers[8] || '',
-        
-        // CORRECTED: Enhanced structure with proper data mapping
+
         enhanced_data: {
           product_assets: {
             name: productAssets.product_name,
@@ -206,7 +203,7 @@ const EnhancedQuestionnaire = () => {
           audience_intelligence: {
             demographics: {
               age_ranges: audienceData.age_ranges || [],
-              income_levels: audienceData.income_levels || [], // Multiple income brackets
+              income_levels: audienceData.income_levels || [],
               lifestyle_profile: audienceData.lifestyle_profile
             },
             psychographics: {
@@ -230,14 +227,17 @@ const EnhancedQuestionnaire = () => {
           }
         }
       };
-      
+
       console.log('💾 Saving enhanced answers:', enhancedAnswers);
-      localStorage.setItem('questionnaireAnswers', JSON.stringify(enhancedAnswers));
-      localStorage.setItem('questionnaireCompleted', 'true');
-      setIsComplete(true);
-      setTimeout(() => {
-        window.location.href = '/brief';
-      }, 2000);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('questionnaireAnswers', JSON.stringify(enhancedAnswers));
+        localStorage.setItem('questionnaireCompleted', 'true');
+        setIsComplete(true);
+        setTimeout(() => {
+          // CORRECTED REDIRECT URL
+          window.location.href = '/generate';
+        }, 2000);
+      }
     }
   };
 
@@ -249,6 +249,9 @@ const EnhancedQuestionnaire = () => {
   };
 
   const isFormValid = () => {
+    if (!currentQuestionData) {
+      return false;
+    }
     if (currentQuestionData.type === 'comprehensive_product') {
       const currentAnswers = answers[currentQuestion] || {};
       return currentAnswers.product_name && currentAnswers.product_description && currentAnswers.product_category;
@@ -260,13 +263,12 @@ const EnhancedQuestionnaire = () => {
     return !!answers[currentQuestion];
   };
 
-  // Enhanced Completion Screen
   if (isComplete) {
     return (
       <main className="min-h-screen center-luxury" style={{ background: 'var(--surface-primary)' }}>
         <div className="text-center fade-in-luxury">
           <div className="w-32 h-32 rounded-full center-luxury mx-auto mb-8"
-               style={{ 
+               style={{
                  background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                  boxShadow: '0 0 40px rgba(212, 175, 55, 0.3)'
                }}>
@@ -292,35 +294,31 @@ const EnhancedQuestionnaire = () => {
   return (
     <main className="min-h-screen center-luxury px-8" style={{ background: 'var(--surface-primary)' }}>
       <div className="container-luxury">
-        
-        {/* Premium Header */}
         <div className="text-center mb-16">
           <div className="flex-luxury justify-center mb-8">
             <div className="w-20 h-20 rounded-full center-luxury"
-                 style={{ 
+                 style={{
                    background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                    boxShadow: 'var(--shadow-gold)'
                  }}>
-              {currentQuestionData.icon}
+              {currentQuestionData?.icon}
             </div>
             <div className="ml-6 text-left">
               <h1 className="text-hero" style={{ color: 'var(--text-primary)' }}>
-                {currentQuestionData.category}
+                {currentQuestionData?.category}
               </h1>
               <p className="text-subheading mt-2" style={{ color: 'var(--brand-gold)' }}>
-                {currentQuestionData.title}
+                {currentQuestionData?.title}
               </p>
             </div>
           </div>
-          
-          {/* Premium Progress Bar */}
           <div className="max-w-lg mx-auto mb-8">
             <div className="flex justify-between text-caption mb-4" style={{ color: 'var(--text-tertiary)' }}>
               <span>Question {currentQuestion} of {questions.length}</span>
               <span>{Math.round((currentQuestion / questions.length) * 100)}% Complete</span>
             </div>
             <div className="progress-luxury">
-              <div 
+              <div
                 className="progress-fill"
                 style={{ width: `${(currentQuestion / questions.length) * 100}%` }}
               />
@@ -328,18 +326,15 @@ const EnhancedQuestionnaire = () => {
           </div>
         </div>
 
-        {/* Premium Question Card */}
         <div className="card-question max-w-5xl mx-auto fade-in-luxury">
           <div className="text-center mb-12">
             <h2 className="text-title mb-6" style={{ color: 'var(--text-primary)' }}>
-              {currentQuestionData.question}
+              {currentQuestionData?.question}
             </h2>
           </div>
 
-          {/* Comprehensive Product Form */}
-          {currentQuestionData.type === 'comprehensive_product' && (
+          {currentQuestionData?.type === 'comprehensive_product' && (
             <div className="space-y-8">
-              {/* Product Name */}
               <div className="space-y-3">
                 <label className="text-subheading font-medium" style={{ color: 'var(--brand-gold)' }}>
                   Product Name *
@@ -359,13 +354,12 @@ const EnhancedQuestionnaire = () => {
                 />
               </div>
 
-              {/* Product Image Upload */}
               <div className="space-y-3">
                 <label className="text-subheading font-medium" style={{ color: 'var(--brand-gold)' }}>
                   Product Image/Logo
                 </label>
                 <div className="border-2 border-dashed rounded-xl p-8 text-center transition-colors"
-                     style={{ 
+                     style={{
                        borderColor: 'var(--surface-elevated)',
                        background: 'var(--surface-secondary)'
                      }}>
@@ -379,9 +373,9 @@ const EnhancedQuestionnaire = () => {
                   <label htmlFor="product-image-upload" className="cursor-pointer">
                     {uploadedImage ? (
                       <div className="space-y-4">
-                        <img 
-                          src={uploadedImage} 
-                          alt="Product preview" 
+                        <img
+                          src={uploadedImage}
+                          alt="Product preview"
                           className="w-32 h-32 object-cover rounded-lg mx-auto border-2"
                           style={{ borderColor: 'var(--brand-gold)' }}
                         />
@@ -409,7 +403,6 @@ const EnhancedQuestionnaire = () => {
                 </div>
               </div>
 
-              {/* Brand Colors */}
               <div className="space-y-3">
                 <label className="text-subheading font-medium" style={{ color: 'var(--brand-gold)' }}>
                   Brand Colors
@@ -451,7 +444,6 @@ const EnhancedQuestionnaire = () => {
                 </div>
               </div>
 
-              {/* Brand Typography */}
               <div className="space-y-3">
                 <label className="text-subheading font-medium" style={{ color: 'var(--brand-gold)' }}>
                   Brand Typography
@@ -471,7 +463,6 @@ const EnhancedQuestionnaire = () => {
                 />
               </div>
 
-              {/* Specific Product Category */}
               <div className="space-y-3">
                 <label className="text-subheading font-medium" style={{ color: 'var(--brand-gold)' }}>
                   Specific Product Type
@@ -537,7 +528,6 @@ const EnhancedQuestionnaire = () => {
                 </div>
               </div>
 
-              {/* Product Description */}
               <div className="space-y-3">
                 <label className="text-subheading font-medium" style={{ color: 'var(--brand-gold)' }}>
                   Product Description *
@@ -553,17 +543,14 @@ const EnhancedQuestionnaire = () => {
             </div>
           )}
 
-          {/* Audience Profiling */}
-          {currentQuestionData.type === 'audience_profiling' && (
+          {currentQuestionData?.type === 'audience_profiling' && (
             <div className="space-y-10">
-              {/* Demographics Section */}
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-4">
                   <MapPin className="w-6 h-6" style={{ color: 'var(--brand-gold)' }} />
                   <h3 className="text-heading" style={{ color: 'var(--brand-gold)' }}>Demographics</h3>
                 </div>
-                
-                {/* Age Ranges */}
+
                 <div className="space-y-3">
                   <label className="text-subheading font-medium" style={{ color: 'var(--text-primary)' }}>
                     Age Groups (select all that apply)
@@ -594,7 +581,6 @@ const EnhancedQuestionnaire = () => {
                   </p>
                 </div>
 
-                {/* Income Levels - Multiple Selection */}
                 <div className="space-y-3">
                   <label className="text-subheading font-medium" style={{ color: 'var(--text-primary)' }}>
                     Income Brackets (select all that apply)
@@ -626,13 +612,12 @@ const EnhancedQuestionnaire = () => {
                 </div>
               </div>
 
-              {/* Psychographics Section */}
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Heart className="w-6 h-6" style={{ color: 'var(--brand-gold)' }} />
                   <h3 className="text-heading" style={{ color: 'var(--brand-gold)' }}>Values & Motivations</h3>
                 </div>
-                
+
                 <div className="space-y-3">
                   <label className="text-subheading font-medium" style={{ color: 'var(--text-primary)' }}>
                     They care most about... (select top 3)
@@ -672,13 +657,12 @@ const EnhancedQuestionnaire = () => {
                 </div>
               </div>
 
-              {/* Behavioral Section */}
               <div className="space-y-6">
                 <div className="flex items-center gap-3 mb-4">
                   <ShoppingBag className="w-6 h-6" style={{ color: 'var(--brand-gold)' }} />
                   <h3 className="text-heading" style={{ color: 'var(--brand-gold)' }}>Shopping & Media Behavior</h3>
                 </div>
-                
+
                 <div className="space-y-3">
                   <label className="text-subheading font-medium" style={{ color: 'var(--text-primary)' }}>
                     Research Approach
@@ -737,10 +721,9 @@ const EnhancedQuestionnaire = () => {
             </div>
           )}
 
-          {/* Single Choice Questions */}
-          {currentQuestionData.type === 'single_choice' && (
+          {currentQuestionData?.type === 'single_choice' && (
             <div className="grid gap-4">
-              {currentQuestionData.options?.map((option: any) => (
+              {currentQuestionData.options?.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => handleResponse(currentQuestionData.id, option.value)}
@@ -755,25 +738,24 @@ const EnhancedQuestionnaire = () => {
             </div>
           )}
 
-          {/* Multiple Choice */}
-          {currentQuestionData.type === 'multiple_choice' && (
+          {currentQuestionData?.type === 'multiple_choice' && (
             <div className="grid gap-4">
-              {currentQuestionData.options?.map((option: any) => (
+              {currentQuestionData.options?.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => {
                     const currentSelections = answers[currentQuestionData.id] || [];
                     const isSelected = currentSelections.includes(option.value);
                     let newSelections;
-                    
+
                     if (isSelected) {
-                      newSelections = currentSelections.filter((item: string) => item !== option.value);
+                      newSelections = currentSelections.filter((item) => item !== option.value);
                     } else if (currentSelections.length < (currentQuestionData.max_selections || 3)) {
                       newSelections = [...currentSelections, option.value];
                     } else {
                       return;
                     }
-                    
+
                     handleResponse(currentQuestionData.id, newSelections);
                   }}
                   className={`choice-option scale-luxury ${answers[currentQuestionData.id]?.includes(option.value) ? 'selected' : ''}`}
@@ -794,10 +776,9 @@ const EnhancedQuestionnaire = () => {
             </div>
           )}
 
-          {/* Visual Choice */}
-          {currentQuestionData.type === 'visual_choice' && (
+          {currentQuestionData?.type === 'visual_choice' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {currentQuestionData.options?.map((option: any) => (
+              {currentQuestionData.options?.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => handleResponse(currentQuestionData.id, option.value)}
@@ -817,8 +798,7 @@ const EnhancedQuestionnaire = () => {
             </div>
           )}
 
-          {/* Text with Choices */}
-          {currentQuestionData.type === 'text_with_choices' && (
+          {currentQuestionData?.type === 'text_with_choices' && (
             <div className="space-y-8">
               <textarea
                 className="input-luxury w-full"
@@ -826,14 +806,14 @@ const EnhancedQuestionnaire = () => {
                 value={answers[currentQuestionData.id] || ''}
                 onChange={(e) => handleResponse(currentQuestionData.id, e.target.value)}
               />
-              
+
               {currentQuestionData.options && (
                 <div>
                   <p className="text-subheading text-center mb-6" style={{ color: 'var(--brand-gold)' }}>
                     Primary impact area:
                   </p>
                   <div className="flex flex-wrap justify-center gap-4">
-                    {currentQuestionData.options.map((option: any) => (
+                    {currentQuestionData.options.map((option) => (
                       <button
                         key={option.value}
                         className="btn-ghost px-6 py-3"
@@ -847,19 +827,17 @@ const EnhancedQuestionnaire = () => {
             </div>
           )}
 
-          {/* Follow-up Question */}
-          {showFollowUp && currentQuestionData.followUp && (
+          {showFollowUp && currentQuestionData?.followUp && (
             <div className="mt-8 p-6 rounded-xl fade-in-luxury"
-                 style={{ 
-                   background: 'var(--brand-gold)', 
-                   color: 'var(--brand-charcoal)' 
+                 style={{
+                   background: 'var(--brand-gold)',
+                   color: 'var(--brand-charcoal)'
                  }}>
               <p className="text-body font-bold mb-2">Follow-up:</p>
               <p className="text-body-large">{currentQuestionData.followUp}</p>
             </div>
           )}
 
-          {/* Premium Navigation */}
           <div className="flex justify-between items-center mt-16 pt-8"
                style={{ borderTop: `1px solid var(--surface-elevated)` }}>
             <button
@@ -873,7 +851,7 @@ const EnhancedQuestionnaire = () => {
             >
               Previous
             </button>
-            
+
             <button
               onClick={handleNext}
               disabled={!isFormValid()}
@@ -892,13 +870,12 @@ const EnhancedQuestionnaire = () => {
           </div>
         </div>
 
-        {/* Premium Question Dots */}
         <div className="flex justify-center mt-12 gap-4">
-          {questions.map((q: any, index: number) => (
+          {questions.map((q, index) => (
             <div
               key={q.id}
               className={`question-dot ${
-                index + 1 === currentQuestion ? 'active' : 
+                index + 1 === currentQuestion ? 'active' :
                 index + 1 < currentQuestion ? 'complete' : ''
               }`}
             />
