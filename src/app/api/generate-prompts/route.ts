@@ -121,7 +121,7 @@ Return ONLY valid JSON using "${productName}" throughout:
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
-      "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} benefits",
+      "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
       "product_reference": "${productName} clearly visible and referenced",
       "authenticity": "Genuine ${productName} user experience"
     }
