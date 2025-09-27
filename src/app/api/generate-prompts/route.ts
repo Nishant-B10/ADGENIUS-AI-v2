@@ -20,7 +20,6 @@ Generate four comprehensive deliverables using all provided intelligence:
 Always use specific details from the provided data rather than generic placeholders.`;
 
 export async function POST(request: NextRequest) {
-  // Declare variables in the outer scope so they are accessible by both try and catch blocks
   let answers = {};
   let enhancedData = {};
   let productAssets = {};
@@ -124,7 +123,7 @@ Return ONLY valid JSON using "${productName}" throughout:
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
-      "prompt": "${targetAges} testimonial about ${productName} benefits",
+      "prompt": `Authentic ${targetAges} customer testimonial featuring ${productName} benefits`,
       "product_reference": "${productName} clearly visible and referenced",
       "authenticity": "Genuine ${productName} user experience"
     }
@@ -189,7 +188,6 @@ Return ONLY valid JSON using "${productName}" throughout:
   } catch (error) {
     console.error('❌ Enhanced generation error:', error);
     
-    // Variables are now correctly in scope and can be used here.
     const enhancedDataFallback = answers?.enhanced_data || {};
     const productAssetsFallback = enhancedDataFallback.product_assets || {};
     const audienceIntelligenceFallback = enhancedDataFallback.audience_intelligence || {};
