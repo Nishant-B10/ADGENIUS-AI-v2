@@ -110,20 +110,20 @@ Return ONLY valid JSON using "${productName}" throughout:
     },
     "photo_ad_prompts": {
         "hero_image": {
-            "prompt": "Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal",
-            "technical_specs": "Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}",
-            "brand_elements": "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
+            "prompt": "Professional photography of ${productName} with brand colors ${brandColors.primary} and ${brandColors.secondary}, styled for ${incomeGroups} market appeal",
+            "technical_specs": "Studio lighting highlighting ${productName}, brand color integration ${brandColors.primary}/${brandColors.secondary}/${brandColors.accent}",
+            "brand_elements": "Product: ${productName}, Colors: ${brandColors.primary}/${brandColors.secondary}/${brandColors.accent}",
             "product_focus": "${productName} as central focus with premium styling"
         },
         "lifestyle_image": {
-            "prompt": "${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents",
+            "prompt": "${targetAges} person authentically using ${productName} in lifestyle environment with ${brandColors.primary} brand accents",
             "product_integration": "${productName} seamlessly integrated in scene",
             "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
         },
         "social_proof": {
             "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
             "authenticity_cues": "Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic",
-            "brand_consistency": "${productName} visible with ${secondaryColor} background and ${accentColor} accents",
+            "brand_consistency": "${productName} visible with ${brandColors.secondary} background and ${brandColors.accent} accents",
             "product_validation": "${productName} testimonial credibility and satisfaction"
         }
     },
@@ -136,7 +136,7 @@ Return ONLY valid JSON using "${productName}" throughout:
         "narrative": "${productName} story for ${targetAges} customers",
         "emotional_journey": "Customer transformation through ${productName}",
         "demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
-        "visual_progression": "${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}",
+        "visual_progression": "${productName} brand color progression: ${brandColors.secondary} → ${brandColors.primary} → ${brandColors.accent}",
         "product_integration": "${productName} featured prominently throughout narrative arc"
     }
 }`
