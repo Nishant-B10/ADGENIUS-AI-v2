@@ -3,10 +3,10 @@ import { ChevronRight, Check, Zap, Target, Palette, Users, TrendingUp, DollarSig
 
 const EnhancedQuestionnaire = () => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<any>({});
   const [isComplete, setIsComplete] = useState(false);
   const [showFollowUp, setShowFollowUp] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState(null);
+  const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
 
   const questions = [
     {
@@ -122,15 +122,17 @@ const EnhancedQuestionnaire = () => {
 
   const currentQuestionData = questions[currentQuestion - 1];
 
-  const handleResponse = (questionId, value) => {
+  // *** CORRECTION 1: Added explicit types to function parameters ***
+  const handleResponse = (questionId: number | string, value: any) => {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
 
-    if (currentQuestionData?.type === 'text_with_choices' && value.length > 50 && !showFollowUp) {
+    // *** CORRECTION 2: Ensured 'value' is a string before checking its length ***
+    if (currentQuestionData?.type === 'text_with_choices' && typeof value === 'string' && value.length > 50 && !showFollowUp) {
       setShowFollowUp(true);
     }
   };
 
-  const handleFieldChange = (questionId, fieldName, value) => {
+  const handleFieldChange = (questionId: number, fieldName: string, value: any) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: {
@@ -140,13 +142,13 @@ const EnhancedQuestionnaire = () => {
     }));
   };
 
-  const handleMultiSelectChange = (questionId, fieldName, optionValue, maxSelections) => {
+  const handleMultiSelectChange = (questionId: number, fieldName: string, optionValue: string, maxSelections?: number) => {
     const currentSelections = answers[questionId]?.[fieldName] || [];
     const isSelected = currentSelections.includes(optionValue);
     let newSelections;
 
     if (isSelected) {
-      newSelections = currentSelections.filter((item) => item !== optionValue);
+      newSelections = currentSelections.filter((item: string) => item !== optionValue);
     } else if (currentSelections.length < (maxSelections || 10)) {
       newSelections = [...currentSelections, optionValue];
     } else {
@@ -156,7 +158,7 @@ const EnhancedQuestionnaire = () => {
     handleFieldChange(questionId, fieldName, newSelections);
   };
 
-  const handleImageUpload = (event) => {
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
@@ -234,7 +236,6 @@ const EnhancedQuestionnaire = () => {
         localStorage.setItem('questionnaireCompleted', 'true');
         setIsComplete(true);
         setTimeout(() => {
-          // CORRECTED REDIRECT URL
           window.location.href = '/generate';
         }, 2000);
       }
@@ -252,15 +253,20 @@ const EnhancedQuestionnaire = () => {
     if (!currentQuestionData) {
       return false;
     }
+    const currentAnswer = answers[currentQuestionData.id];
+    
     if (currentQuestionData.type === 'comprehensive_product') {
-      const currentAnswers = answers[currentQuestion] || {};
-      return currentAnswers.product_name && currentAnswers.product_description && currentAnswers.product_category;
+      return currentAnswer?.product_name && currentAnswer?.product_description && currentAnswer?.product_category;
     }
     if (currentQuestionData.type === 'audience_profiling') {
-      const currentAnswers = answers[currentQuestion] || {};
-      return currentAnswers.age_ranges?.length > 0 && currentAnswers.income_levels?.length > 0 && currentAnswers.core_values?.length > 0;
+      return currentAnswer?.age_ranges?.length > 0 && currentAnswer?.income_levels?.length > 0 && currentAnswer?.core_values?.length > 0;
     }
-    return !!answers[currentQuestion];
+    // For multiple_choice, ensure at least one selection is made
+    if (currentQuestionData.type === 'multiple_choice') {
+      return Array.isArray(currentAnswer) && currentAnswer.length > 0;
+    }
+    // For all other types (single_choice, text_with_choices, visual_choice)
+    return !!currentAnswer;
   };
 
   if (isComplete) {
@@ -301,7 +307,7 @@ const EnhancedQuestionnaire = () => {
                    background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                    boxShadow: 'var(--shadow-gold)'
                  }}>
-              {currentQuestionData?.icon}
+              {React.cloneElement(currentQuestionData?.icon, { color: 'var(--brand-charcoal)' })}
             </div>
             <div className="ml-6 text-left">
               <h1 className="text-hero" style={{ color: 'var(--text-primary)' }}>
@@ -374,7 +380,7 @@ const EnhancedQuestionnaire = () => {
                     {uploadedImage ? (
                       <div className="space-y-4">
                         <img
-                          src={uploadedImage}
+                          src={uploadedImage as string}
                           alt="Product preview"
                           className="w-32 h-32 object-cover rounded-lg mx-auto border-2"
                           style={{ borderColor: 'var(--brand-gold)' }}
@@ -480,7 +486,6 @@ const EnhancedQuestionnaire = () => {
                       backgroundRepeat: 'no-repeat',
                       backgroundSize: '20px',
                       paddingRight: '50px',
-                      height: '56px'
                     }}
                     value={answers[1]?.product_category || ''}
                     onChange={(e) => handleFieldChange(1, 'product_category', e.target.value)}
@@ -564,7 +569,7 @@ const EnhancedQuestionnaire = () => {
                     ].map((option) => (
                       <button
                         key={option.value}
-                        onClick={() => handleMultiSelectChange(3, 'age_ranges', option.value, 4)}
+                        onClick={() => handleMultiSelectChange(3, 'age_ranges', option.value)}
                         className={`choice-option scale-luxury text-left ${answers[3]?.age_ranges?.includes(option.value) ? 'selected' : ''}`}
                       >
                         <div className="flex items-center justify-between">
@@ -594,7 +599,7 @@ const EnhancedQuestionnaire = () => {
                     ].map((option) => (
                       <button
                         key={option.value}
-                        onClick={() => handleMultiSelectChange(3, 'income_levels', option.value, 4)}
+                        onClick={() => handleMultiSelectChange(3, 'income_levels', option.value)}
                         className={`choice-option scale-luxury text-left ${answers[3]?.income_levels?.includes(option.value) ? 'selected' : ''}`}
                       >
                         <div className="flex items-center justify-between">
@@ -701,7 +706,7 @@ const EnhancedQuestionnaire = () => {
                     ].map((option) => (
                       <button
                         key={option.value}
-                        onClick={() => handleMultiSelectChange(3, 'media_consumption', option.value, 7)}
+                        onClick={() => handleMultiSelectChange(3, 'media_consumption', option.value)}
                         className={`choice-option scale-luxury text-left ${answers[3]?.media_consumption?.includes(option.value) ? 'selected' : ''}`}
                       >
                         <div className="flex items-center justify-between">
@@ -749,7 +754,7 @@ const EnhancedQuestionnaire = () => {
                     let newSelections;
 
                     if (isSelected) {
-                      newSelections = currentSelections.filter((item) => item !== option.value);
+                      newSelections = currentSelections.filter((item: string) => item !== option.value);
                     } else if (currentSelections.length < (currentQuestionData.max_selections || 3)) {
                       newSelections = [...currentSelections, option.value];
                     } else {
@@ -803,8 +808,9 @@ const EnhancedQuestionnaire = () => {
               <textarea
                 className="input-luxury w-full"
                 placeholder={currentQuestionData.placeholder}
-                value={answers[currentQuestionData.id] || ''}
-                onChange={(e) => handleResponse(currentQuestionData.id, e.target.value)}
+                value={answers[currentQuestionData.id]?.text || ''}
+                onChange={(e) => handleResponse(currentQuestionData.id, { ...answers[currentQuestionData.id], text: e.target.value })}
+                rows={4}
               />
 
               {currentQuestionData.options && (
@@ -816,7 +822,8 @@ const EnhancedQuestionnaire = () => {
                     {currentQuestionData.options.map((option) => (
                       <button
                         key={option.value}
-                        className="btn-ghost px-6 py-3"
+                        onClick={() => handleResponse(currentQuestionData.id, { ...answers[currentQuestionData.id], impact: option.value })}
+                        className={`btn-ghost px-6 py-3 ${answers[currentQuestionData.id]?.impact === option.value ? 'selected-ghost' : ''}`}
                       >
                         {option.label}
                       </button>
@@ -858,6 +865,7 @@ const EnhancedQuestionnaire = () => {
               className="btn-primary scale-luxury"
               style={{
                 opacity: !isFormValid() ? 0.5 : 1,
+                cursor: !isFormValid() ? 'not-allowed' : 'pointer',
                 whiteSpace: 'nowrap',
                 display: 'inline-flex',
                 alignItems: 'center',
