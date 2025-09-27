@@ -20,33 +20,35 @@ Generate four comprehensive deliverables using all provided intelligence:
 Always use specific details from the provided data rather than generic placeholders.`;
 
 export async function POST(request: NextRequest) {
+  let answers: any = {};
+
   try {
     const body = await request.json();
-    const answers = body.answers || {};
+    answers = body.answers || {};
 
     console.log('🚀 Processing comprehensive brand and audience intelligence');
-    
-    // FIXED: Proper data extraction from enhanced structure
-        const enhancedData = answers.enhanced_data || {};
-        const productAssets = enhancedData.product_assets || {};
-        const audienceIntelligence = enhancedData.audience_intelligence || {};
 
-        // CRITICAL FIX: Extract product name correctly
-        const productName = productAssets.name || answers[1] || 'PRODUCT_NAME_MISSING';
-        const brandColors = productAssets.brand_colors || {};
-        const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'TARGET_AGE_MISSING';
-        const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'INCOME_MISSING';
-        const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'VALUES_MISSING';
+    // These variables are now correctly declared after 'answers' has been populated.
+    const enhancedData = answers?.enhanced_data || {};
+    const productAssets = enhancedData.product_assets || {};
+    const audienceIntelligence = enhancedData.audience_intelligence || {};
 
-        // DEBUG: Log what we extracted
-        console.log('📝 DEBUG - API Route - Extracted data:', {
-          productName,
-          targetAges,
-          incomeGroups,
-          coreValues,
-          primaryColor: brandColors.primary,
-          hasImage: !!productAssets.image
-        });
+    // CRITICAL FIX: Extract product name correctly
+    const productName = productAssets.name || answers[1] || 'PRODUCT_NAME_MISSING';
+    const brandColors = productAssets.brand_colors || {};
+    const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'TARGET_AGE_MISSING';
+    const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'INCOME_MISSING';
+    const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'VALUES_MISSING';
+
+    // DEBUG: Log what we extracted
+    console.log('📝 DEBUG - API Route - Extracted data:', {
+      productName,
+      targetAges,
+      incomeGroups,
+      coreValues,
+      primaryColor: brandColors.primary,
+      hasImage: !!productAssets.image
+    });
 
     // Check API key
     const apiKey = process.env.NEXT_PUBLIC_CLAUDE_API_KEY || process.env.CLAUDE_API_KEY;
@@ -109,19 +111,21 @@ Return ONLY valid JSON using "${productName}" throughout:
   },
   "photo_ad_prompts": {
     "hero_image": {
-      "prompt": "Professional photography of ${productName} with ${brandColors.primary} brand colors",
-      "brand_elements": "Product: ${productName}, targeting ${targetAges}",
-      "product_focus": "${productName} prominently featured"
+      "prompt": "Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal",
+      "technical_specs": "Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}",
+      "brand_elements": "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
+      "product_focus": "${productName} as central focus with premium styling"
     },
     "lifestyle_image": {
-      "prompt": "${targetAges} person using ${productName} naturally",
+      "prompt": "${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents",
       "product_integration": "${productName} seamlessly integrated in scene",
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
-      "prompt": "${targetAges} testimonial about ${productName} benefits",
-      "product_reference": "${productName} clearly visible and referenced",
-      "authenticity": "Genuine ${productName} user experience"
+      "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
+      "authenticity_cues": "Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic",
+      "brand_consistency": "${productName} visible with ${secondaryColor} background and ${accentColor} accents",
+      "product_validation": "${productName} testimonial credibility and satisfaction"
     }
   },
   "client_brief": {
@@ -132,7 +136,9 @@ Return ONLY valid JSON using "${productName}" throughout:
   "ad_storyline": {
     "narrative": "${productName} story for ${targetAges} customers",
     "emotional_journey": "Customer transformation through ${productName}",
-    "product_integration": "${productName} central to narrative arc"
+    "demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
+    "visual_progression": "${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}",
+    "product_integration": "${productName} featured prominently throughout narrative arc"
   }
 }`
         }]
@@ -184,18 +190,17 @@ Return ONLY valid JSON using "${productName}" throughout:
   } catch (error) {
     console.error('❌ Enhanced generation error:', error);
     
-    // Fallback with actual product name
-    const enhancedData = answers.enhanced_data || {};
-    const productAssets = enhancedData.product_assets || {};
-    const audienceIntelligence = enhancedData.audience_intelligence || {};
+    const enhancedDataFallback = answers?.enhanced_data || {};
+    const productAssetsFallback = enhancedDataFallback.product_assets || {};
+    const audienceIntelligenceFallback = enhancedDataFallback.audience_intelligence || {};
     
-    const productName = productAssets.name || 'your product';
-    const primaryColor = productAssets.brand_colors?.primary || '#000000';
-    const secondaryColor = productAssets.brand_colors?.secondary || '#FFFFFF';
-    const accentColor = productAssets.brand_colors?.accent || '#D4AF37';
-    const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'target demographic';
-    const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'income bracket';
-    const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'customer values';
+    const productName = productAssetsFallback.name || 'your product';
+    const primaryColor = productAssetsFallback.brand_colors?.primary || '#000000';
+    const secondaryColor = productAssetsFallback.brand_colors?.secondary || '#FFFFFF';
+    const accentColor = productAssetsFallback.brand_colors?.accent || '#D4AF37';
+    const targetAges = audienceIntelligenceFallback.demographics?.age_ranges?.join(', ') || 'target demographic';
+    const incomeGroups = audienceIntelligenceFallback.demographics?.income_levels?.join(', ') || 'income bracket';
+    const coreValues = audienceIntelligenceFallback.psychographics?.core_values?.join(', ') || 'customer values';
     
     return NextResponse.json({
       success: false,
@@ -241,50 +246,22 @@ Return ONLY valid JSON using "${productName}" throughout:
               scene_number: 4,
               duration: "25-30 seconds",
               shot_type: "Product beauty shot",
-              action: `${productName} call-to-action with branding`,
-              lighting: `Clean product lighting showcasing ${productName}`,
-              subject: `${productName} with complete brand identity`,
-              brand_integration: `Full ${productName} brand color integration`,
-              product_reference: `${productName} final brand impression`
+              action: "Opening scene showcasing ${productName} in premium environment",
+              lighting: "Golden hour lighting with ${primaryColor} brand color accents",
+              subject: "${targetAges} person demonstrating ${productName} benefits",
+              brand_integration: "${productName} prominently featured with ${secondaryColor} background",
+              product_reference: "${productName} final brand impression"
             }
           ]
         },
         photo_ad_prompts: {
           hero_image: {
-            prompt: `Professional product photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal`,
-            technical_specs: `Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}`,
-            brand_elements: `Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}`,
-            product_focus: `${productName} as central focus with premium styling`
+            prompt: "Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal",
+            technical_specs: "Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}",
+            brand_elements": "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
+            product_focus": "${productName} as central focus with premium styling"
           },
           lifestyle_image: {
-            prompt: `${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents`,
-            demographic_casting: `${targetAges} representing ${incomeGroups} lifestyle using ${productName}`,
-            brand_integration: `${productName} naturally integrated with ${primaryColor} environmental accents`,
-            product_reference: `${productName} seamless lifestyle integration`
-          },
-          social_proof: {
-            prompt: `Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction`,
-            authenticity_cues: `Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic`,
-            brand_consistency: `${productName} visible with ${secondaryColor} background and ${accentColor} accents`,
-            product_validation: `${productName} testimonial credibility and satisfaction`
-          }
-        },
-        client_brief: {
-          product_overview: `${productName} - ${productAssets.category || 'Product'} targeting ${incomeGroups} customers`,
-          target_audience_profile: `${targetAges} customers, Income: ${incomeGroups}, Values: ${coreValues}`,
-          psychology_strategy: `${productName} marketing strategy for ${targetAges} customers who value ${coreValues}`,
-          creative_guidelines: `Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}`,
-          success_metrics: `${productName} performance measurement for ${incomeGroups} market penetration`
-        },
-        ad_storyline: {
-          narrative_arc: `${productName} story targeting ${targetAges} customers who value ${coreValues}`,
-          emotional_journey: `Customer discovers ${productName} and achieves transformation aligned with ${coreValues}`,
-          demographic_targeting: `${productName} story resonates with ${targetAges} ${incomeGroups} audience`,
-          visual_progression: `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
-          product_integration: `${productName} featured prominently throughout narrative arc`
-        }
-      },
-      source: 'enhanced_fallback_with_product_name'
-    });
-  }
-}
+            prompt: "Authentic ${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents",
+            demographic_casting: "${targetAges} representing ${incomeGroups} lifestyle using ${productName}",
+            brand_integration: "${productName} naturally integrated with ${primaryColor} environmental
