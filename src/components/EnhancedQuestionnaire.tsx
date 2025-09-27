@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import { ChevronRight, Check, Zap, Target, Palette, Users, TrendingUp, DollarSign, Brain, Package, Upload, MapPin, Heart, ShoppingBag } from 'lucide-react';
 
+// *** CORRECTION 1: Define a type for the answers state object ***
+type Answers = {
+  [key: string]: any;
+};
+
 const EnhancedQuestionnaire = () => {
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [answers, setAnswers] = useState<any>({});
+  // *** CORRECTION 2: Apply the 'Answers' type to the useState hook ***
+  const [answers, setAnswers] = useState<Answers>({});
   const [isComplete, setIsComplete] = useState(false);
   const [showFollowUp, setShowFollowUp] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | ArrayBuffer | null>(null);
@@ -122,17 +128,17 @@ const EnhancedQuestionnaire = () => {
 
   const currentQuestionData = questions[currentQuestion - 1];
 
-  // *** CORRECTION 1: Added explicit types to function parameters ***
   const handleResponse = (questionId: number | string, value: any) => {
+    // Because 'answers' is typed, TypeScript now knows 'prev' is of type 'Answers'
     setAnswers(prev => ({ ...prev, [questionId]: value }));
 
-    // *** CORRECTION 2: Ensured 'value' is a string before checking its length ***
     if (currentQuestionData?.type === 'text_with_choices' && typeof value === 'string' && value.length > 50 && !showFollowUp) {
       setShowFollowUp(true);
     }
   };
 
   const handleFieldChange = (questionId: number, fieldName: string, value: any) => {
+    // This also works now without needing to type 'prev' here
     setAnswers(prev => ({
       ...prev,
       [questionId]: {
@@ -261,11 +267,9 @@ const EnhancedQuestionnaire = () => {
     if (currentQuestionData.type === 'audience_profiling') {
       return currentAnswer?.age_ranges?.length > 0 && currentAnswer?.income_levels?.length > 0 && currentAnswer?.core_values?.length > 0;
     }
-    // For multiple_choice, ensure at least one selection is made
     if (currentQuestionData.type === 'multiple_choice') {
       return Array.isArray(currentAnswer) && currentAnswer.length > 0;
     }
-    // For all other types (single_choice, text_with_choices, visual_choice)
     return !!currentAnswer;
   };
 
@@ -307,7 +311,7 @@ const EnhancedQuestionnaire = () => {
                    background: 'linear-gradient(135deg, var(--brand-gold), #F4D03F)',
                    boxShadow: 'var(--shadow-gold)'
                  }}>
-              {React.cloneElement(currentQuestionData?.icon, { color: 'var(--brand-charcoal)' })}
+              {React.cloneElement(currentQuestionData?.icon as React.ReactElement, { color: 'var(--brand-charcoal)' })}
             </div>
             <div className="ml-6 text-left">
               <h1 className="text-hero" style={{ color: 'var(--text-primary)' }}>
