@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     answers = body.answers || {};
 
     console.log('🚀 Processing comprehensive brand and audience intelligence');
-    
+
     // The variables are now correctly declared after 'answers' has been populated.
     const enhancedData = answers?.enhanced_data || {};
     const productAssets = enhancedData.product_assets || {};
@@ -136,7 +136,7 @@ Return ONLY valid JSON using "${productName}" throughout:
     "emotional_journey": "Customer transformation through ${productName}",
     "demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
     "visual_progression": "${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}",
-    "product_integration": `${productName} featured prominently throughout narrative arc`
+    "product_integration": "${productName} featured prominently throughout narrative arc"
   }
 }`
         }]
@@ -266,7 +266,7 @@ Return ONLY valid JSON using "${productName}" throughout:
             product_reference: `${productName} seamless lifestyle integration`
           },
           social_proof: {
-            prompt: `Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction`,
+            prompt: "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
             authenticity_cues: `Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic`,
             brand_consistency: `${productName} visible with ${secondaryColor} background and ${accentColor} accents`,
             product_validation: `${productName} testimonial credibility and satisfaction`
@@ -281,8 +281,8 @@ Return ONLY valid JSON using "${productName}" throughout:
         },
         ad_storyline: {
           narrative_arc: `${productName} story targeting ${targetAges} customers who value ${coreValues}`,
-          emotional_journey: `Customer discovers ${productName} and achieves transformation aligned with ${coreValues}`,
-          demographic_targeting: `${productName} story resonates with ${targetAges} ${incomeGroups} audience`,
+          emotional_journey: "Customer transformation through ${productName}",
+          demographic_targeting": `${productName} story resonates with ${targetAges} ${incomeGroups} audience`,
           visual_progression: `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
           product_integration: `${productName} featured prominently throughout narrative arc`
         }
