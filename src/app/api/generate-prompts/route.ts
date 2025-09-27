@@ -21,19 +21,17 @@ Always use specific details from the provided data rather than generic placehold
 
 export async function POST(request: NextRequest) {
   let answers = {};
-  let enhancedData = {};
-  let productAssets = {};
-  let audienceIntelligence = {};
-
+  
   try {
     const body = await request.json();
     answers = body.answers || {};
 
     console.log('🚀 Processing comprehensive brand and audience intelligence');
     
-    enhancedData = answers.enhanced_data || {};
-    productAssets = enhancedData.product_assets || {};
-    audienceIntelligence = enhancedData.audience_intelligence || {};
+    // The variables are now declared after 'answers' has been populated.
+    const enhancedData = answers?.enhanced_data || {};
+    const productAssets = enhancedData.product_assets || {};
+    const audienceIntelligence = enhancedData.audience_intelligence || {};
 
     // CRITICAL FIX: Extract product name correctly
     const productName = productAssets.name || answers[1] || 'PRODUCT_NAME_MISSING';
@@ -188,6 +186,7 @@ Return ONLY valid JSON using "${productName}" throughout:
   } catch (error) {
     console.error('❌ Enhanced generation error:', error);
     
+    // The fallback logic is now also correctly placed within the catch block
     const enhancedDataFallback = answers?.enhanced_data || {};
     const productAssetsFallback = enhancedDataFallback.product_assets || {};
     const audienceIntelligenceFallback = enhancedDataFallback.audience_intelligence || {};
