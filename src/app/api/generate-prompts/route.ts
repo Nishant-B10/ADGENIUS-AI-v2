@@ -28,19 +28,16 @@ export async function POST(request: NextRequest) {
 
     console.log('🚀 Processing comprehensive brand and audience intelligence');
 
-    // The variables are now correctly declared after 'answers' has been populated.
     const enhancedData = answers?.enhanced_data || {};
     const productAssets = enhancedData.product_assets || {};
     const audienceIntelligence = enhancedData.audience_intelligence || {};
 
-    // CRITICAL FIX: Extract product name correctly
     const productName = productAssets.name || answers[1] || 'PRODUCT_NAME_MISSING';
     const brandColors = productAssets.brand_colors || {};
     const targetAges = audienceIntelligence.demographics?.age_ranges?.join(', ') || 'TARGET_AGE_MISSING';
     const incomeGroups = audienceIntelligence.demographics?.income_levels?.join(', ') || 'INCOME_MISSING';
     const coreValues = audienceIntelligence.psychographics?.core_values?.join(', ') || 'VALUES_MISSING';
 
-    // DEBUG: Log what we extracted
     console.log('📝 DEBUG - API Route - Extracted data:', {
       productName,
       targetAges,
@@ -50,7 +47,6 @@ export async function POST(request: NextRequest) {
       hasImage: !!productAssets.image
     });
 
-    // Check API key
     const apiKey = process.env.NEXT_PUBLIC_CLAUDE_API_KEY || process.env.CLAUDE_API_KEY;
     if (!apiKey) {
       throw new Error('Claude API key not configured');
@@ -111,20 +107,21 @@ Return ONLY valid JSON using "${productName}" throughout:
   },
   "photo_ad_prompts": {
     "hero_image": {
-      "prompt": "Professional photography of ${productName} with ${brandColors.primary} brand colors",
-      "brand_elements": "Product: ${productName}, targeting ${targetAges}",
-      "product_focus": "${productName} prominently featured"
+      "prompt": "Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal",
+      "technical_specs": "Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}",
+      "brand_elements": "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
+      "product_focus": "${productName} as central focus with premium styling"
     },
     "lifestyle_image": {
-      "prompt": "${targetAges} person using ${productName} naturally",
+      "prompt": "${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents",
       "product_integration": "${productName} seamlessly integrated in scene",
       "demographic_targeting": "${targetAges} ${incomeGroups} lifestyle with ${productName}"
     },
     "social_proof": {
-      // FIXED: Replaced backticks with double quotes
       "prompt": "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
-      "product_reference": "${productName} clearly visible and referenced",
-      "authenticity": "Genuine ${productName} user experience"
+      "authenticity_cues": "Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic",
+      "brand_consistency": "${productName} visible with ${secondaryColor} background and ${accentColor} accents",
+      "product_validation": "${productName} testimonial credibility and satisfaction"
     }
   },
   "client_brief": {
@@ -255,22 +252,22 @@ Return ONLY valid JSON using "${productName}" throughout:
         },
         photo_ad_prompts: {
           hero_image: {
-            prompt: `Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal`,
-            technical_specs: `Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}`,
-            brand_elements: `Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}`,
-            product_focus: `${productName} as central focus with premium styling`
+            prompt: "Professional photography of ${productName} with brand colors ${primaryColor} and ${secondaryColor}, styled for ${incomeGroups} market appeal",
+            technical_specs: "Studio lighting highlighting ${productName}, brand color integration ${primaryColor}/${secondaryColor}/${accentColor}",
+            brand_elements: "Product: ${productName}, Colors: ${primaryColor}/${secondaryColor}/${accentColor}",
+            product_focus: "${productName} as central focus with premium styling"
           },
           lifestyle_image: {
-            prompt: `${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents`,
-            demographic_casting: `${targetAges} representing ${incomeGroups} lifestyle using ${productName}`,
-            brand_integration: `${productName} naturally integrated with ${primaryColor} environmental accents`,
-            product_reference: `${productName} seamless lifestyle integration`
+            prompt: "Authentic ${targetAges} person authentically using ${productName} in lifestyle environment with ${primaryColor} brand accents",
+            demographic_casting: "${targetAges} representing ${incomeGroups} lifestyle using ${productName}",
+            brand_integration: "${productName} naturally integrated with ${primaryColor} environmental accents",
+            product_reference: "${productName} seamless lifestyle integration"
           },
           social_proof: {
             prompt: "Authentic ${targetAges} customer testimonial featuring ${productName} with genuine satisfaction",
-            authenticity_cues: `Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic`,
-            brand_consistency: `${productName} visible with ${secondaryColor} background and ${accentColor} accents`,
-            product_validation: `${productName} testimonial credibility and satisfaction`
+            authenticity_cues: "Credible ${productName} user experience for ${targetAges} ${incomeGroups} demographic",
+            brand_consistency: "${productName} visible with ${secondaryColor} background and ${accentColor} accents",
+            product_validation: "${productName} testimonial credibility and satisfaction"
           }
         },
         client_brief: {
@@ -283,7 +280,7 @@ Return ONLY valid JSON using "${productName}" throughout:
         ad_storyline: {
           narrative_arc: `${productName} story targeting ${targetAges} customers who value ${coreValues}`,
           emotional_journey: "Customer transformation through ${productName}",
-          demographic_targeting": `${productName} story resonates with ${targetAges} ${incomeGroups} audience",
+          demographic_targeting": "${productName} story resonates with ${targetAges} ${incomeGroups} audience",
           visual_progression: `${productName} brand color progression: ${secondaryColor} → ${primaryColor} → ${accentColor}`,
           product_integration: `${productName} featured prominently throughout narrative arc`
         }
